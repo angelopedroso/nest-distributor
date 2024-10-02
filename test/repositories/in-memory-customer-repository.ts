@@ -49,6 +49,16 @@ export class InMemoryCustomerRepository implements CustomerRepository {
     return customer
   }
 
+  async findByDocument(document: string): Promise<Customer | null> {
+    const customer = this.items.find((item) => item.document === document)
+
+    if (!customer) {
+      return null
+    }
+
+    return customer
+  }
+
   async findManyByRecipientIdWithAddress(
     recipientId: string,
     { page, skip }: PaginationParams,

@@ -8,6 +8,8 @@ export abstract class CustomerRepository {
   abstract delete(customer: Customer): Promise<void>
 
   abstract findById(id: string): Promise<Customer | null>
+  abstract findByDocument(document: string): Promise<Customer | null>
+
   abstract findManyByRecipientIdWithAddress(
     recipientId: string,
     params: PaginationParams,
