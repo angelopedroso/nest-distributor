@@ -3,10 +3,10 @@ import {
   Customer,
   CustomerProps,
 } from '@/domain/distribuidora/enterprise/entities/customer'
-import { faker } from '@faker-js/faker/.'
+import { faker } from '@faker-js/faker'
 
 export function MakeCustomer(
-  override: Partial<CustomerProps>,
+  override?: Partial<CustomerProps>,
   id?: UniqueEntityID,
 ) {
   return Customer.create(
