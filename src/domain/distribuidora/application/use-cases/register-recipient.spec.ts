@@ -4,19 +4,19 @@ import { RegisterRecipientUseCase } from './register-recipient'
 import { RecipientAlreadyExistsError } from './errors/recipient-already-exists-error'
 
 let inMemoryRecipientRepository: InMemoryRecipientRepository
-let suv: RegisterRecipientUseCase
+let sut: RegisterRecipientUseCase
 
 describe('Register Recipient', () => {
   beforeEach(() => {
     inMemoryRecipientRepository = new InMemoryRecipientRepository()
 
-    suv = new RegisterRecipientUseCase(inMemoryRecipientRepository)
+    sut = new RegisterRecipientUseCase(inMemoryRecipientRepository)
   })
 
   it('should be able to register a new user', async () => {
     const recipient = MakeRecipient({ name: 'John Doe' })
 
-    const newRecipient = await suv.execute(recipient)
+    const newRecipient = await sut.execute(recipient)
 
     expect(newRecipient.isRight()).toBeTruthy()
     expect(newRecipient.value).toEqual(
@@ -33,7 +33,7 @@ describe('Register Recipient', () => {
 
     inMemoryRecipientRepository.items.push(recipient)
 
-    const newRecipient = await suv.execute(recipient)
+    const newRecipient = await sut.execute(recipient)
 
     expect(newRecipient.isLeft()).toBeTruthy()
     expect(newRecipient.value).toBeInstanceOf(RecipientAlreadyExistsError)

@@ -4,13 +4,13 @@ import { MakeRecipient } from 'test/factories/make-recipient'
 import { WrongCredentialsError } from '@/core/errors/errors/wrong-credentials-error'
 
 let inMemoryStudentRepository: InMemoryRecipientRepository
-let suv: AuthenticateRecipientUseCase
+let sut: AuthenticateRecipientUseCase
 
 describe('Authenticate recipient', () => {
   beforeEach(() => {
     inMemoryStudentRepository = new InMemoryRecipientRepository()
 
-    suv = new AuthenticateRecipientUseCase(inMemoryStudentRepository)
+    sut = new AuthenticateRecipientUseCase(inMemoryStudentRepository)
   })
 
   it('should be able to authenticate a recipient', async () => {
@@ -18,7 +18,7 @@ describe('Authenticate recipient', () => {
 
     inMemoryStudentRepository.items.push(recipient)
 
-    const result = await suv.execute({
+    const result = await sut.execute({
       email: recipient.email,
       password: recipient.password,
     })
@@ -32,7 +32,7 @@ describe('Authenticate recipient', () => {
 
     inMemoryStudentRepository.items.push(recipient)
 
-    const result = await suv.execute({
+    const result = await sut.execute({
       email: recipient.email,
       password: '123456',
     })
