@@ -9,9 +9,7 @@ export interface AddressProps {
   cep: string
 }
 
-export abstract class Address<
-  Props extends AddressProps,
-> extends Entity<Props> {
+export abstract class Address extends Entity<AddressProps> {
   get neighborhood() {
     return this.props.neighborhood
   }
