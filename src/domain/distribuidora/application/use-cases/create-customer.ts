@@ -1,7 +1,8 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { CustomerRepository } from '../repositories/customer-repository'
-import { Either, right } from '@/core/either'
+import { Either, left, right } from '@/core/either'
 import { Customer } from '../../enterprise/entities/customer'
+import { RecipientAlreadyExistsError } from './errors/recipient-already-exists-error'
 
 export interface CreateCustomerUseCaseRequest {
   recipientId: UniqueEntityID
@@ -13,7 +14,10 @@ export interface CreateCustomerUseCaseRequest {
   email: string
 }
 
-export type CreateCustomerUseCaseResponse = Either<null, { customer: Customer }>
+export type CreateCustomerUseCaseResponse = Either<
+  RecipientAlreadyExistsError,
+  { customer: Customer }
+>
 
 export class CreateCustomerUseCase {
   constructor(private customerRepository: CustomerRepository) {}
@@ -27,6 +31,13 @@ export class CreateCustomerUseCase {
     recipientId,
     stateRegistration,
   }: CreateCustomerUseCaseRequest): Promise<CreateCustomerUseCaseResponse> {
+    const customerWithSameDocument =
+      await this.customerRepository.findByDocument(document)
+
+    if (customerWithSameDocument) {
+      return left(new RecipientAlreadyExistsError(document))
+    }
+
     const customer = Customer.create({
       addressId,
       document,
