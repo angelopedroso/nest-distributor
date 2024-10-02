@@ -4,6 +4,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 export interface CustomerProps {
   recipientId: UniqueEntityID
+  addressId: UniqueEntityID
   name: string
   document: string
   type: 'fisíca' | 'jurídica'
@@ -16,6 +17,10 @@ export interface CustomerProps {
 export class Customer extends Entity<CustomerProps> {
   get recipientId() {
     return this.props.recipientId
+  }
+
+  get addressId() {
+    return this.props.addressId
   }
 
   get name() {
@@ -40,6 +45,10 @@ export class Customer extends Entity<CustomerProps> {
 
   get email() {
     return this.props.email
+  }
+
+  get createdAt() {
+    return this.props.createdAt
   }
 
   static create(
