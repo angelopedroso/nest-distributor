@@ -50,4 +50,15 @@ describe('Create Customer', () => {
     expect(newCustomer.isLeft()).toBeTruthy()
     expect(newCustomer.value).toBeInstanceOf(RecipientAlreadyExistsError)
   })
+
+  it('should not be able to create a new customer, due wrong document', async () => {
+    const customer = MakeCustomer({
+      document: '12345678000190',
+    })
+
+    const newCustomer = await sut.execute(customer)
+
+    expect(newCustomer.isLeft()).toBeTruthy()
+    expect(newCustomer.value).toBeInstanceOf(Error)
+  })
 })
