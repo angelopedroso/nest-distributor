@@ -4,6 +4,8 @@ import { InMemoryAddressRepository } from 'test/repositories/in-memory-address-r
 import { MakeCustomer } from 'test/factories/make-customer'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { RecipientAlreadyExistsError } from './errors/recipient-already-exists-error'
+import { CustomerProps } from '../../enterprise/entities/customer'
+import { DocumentIsNotValid } from './errors/document-not-valid'
 
 let inMemoryCustomerRepository: InMemoryCustomerRepository
 let inMemoryAddressRepository: InMemoryAddressRepository
@@ -52,13 +54,23 @@ describe('Create Customer', () => {
   })
 
   it('should not be able to create a new customer, due wrong document', async () => {
-    const customer = MakeCustomer({
-      document: '12345678000190',
-    })
+    const customer = MakeCustomer()
 
-    const newCustomer = await sut.execute(customer)
+    const wrongCustomer: CustomerProps = {
+      addressId: customer.addressId,
+      createdAt: customer.createdAt,
+      email: customer.email,
+      name: customer.name,
+      phone: customer.phone,
+      recipientId: customer.recipientId,
+      type: customer.type,
+      stateRegistration: customer.stateRegistration,
+      document: '12345678000190',
+    }
+
+    const newCustomer = await sut.execute(wrongCustomer)
 
     expect(newCustomer.isLeft()).toBeTruthy()
-    expect(newCustomer.value).toBeInstanceOf(Error)
+    expect(newCustomer.value).toBeInstanceOf(DocumentIsNotValid)
   })
 })
