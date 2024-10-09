@@ -1,6 +1,8 @@
 import { Either, left, right } from '@/core/either'
 import { RecipientRepository } from '../repositories/recipient-repository'
 import { WrongCredentialsError } from '@/core/errors/errors/wrong-credentials-error'
+import { HashCompare } from '../cryptography/hash-compare'
+import { Encrypter } from '../cryptography/encrypter'
 
 interface AuthenticateRecipientRequest {
   email: string
@@ -13,7 +15,11 @@ type AuthenticateRecipientResponse = Either<
 >
 
 export class AuthenticateRecipientUseCase {
-  constructor(private recipientRepository: RecipientRepository) {}
+  constructor(
+    private recipientRepository: RecipientRepository,
+    private hashCompare: HashCompare,
+    private encrypter: Encrypter,
+  ) {}
 
   async execute({
     email,
@@ -24,11 +30,19 @@ export class AuthenticateRecipientUseCase {
     if (!recipient) {
       return left(new WrongCredentialsError())
     }
+    const passwordMatch = await this.hashCompare.compare(
+      password,
+      recipient.password,
+    )
 
-    if (recipient.password !== password) {
+    if (!passwordMatch) {
       return left(new WrongCredentialsError())
     }
 
-    return right({ accessToken: recipient.id })
+    const encryptedToken = await this.encrypter.encrypt({
+      sub: recipient.id.toString(),
+    })
+
+    return right({ accessToken: encryptedToken })
   }
 }
