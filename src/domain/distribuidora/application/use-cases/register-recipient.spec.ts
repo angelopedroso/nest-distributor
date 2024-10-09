@@ -2,15 +2,19 @@ import { MakeRecipient } from 'test/factories/make-recipient'
 import { InMemoryRecipientRepository } from 'test/repositories/in-memory-recipient-repository'
 import { RegisterRecipientUseCase } from './register-recipient'
 import { RecipientAlreadyExistsError } from './errors/recipient-already-exists-error'
+import { FakeHasher } from 'test/cryptography/fake-hash'
 
 let inMemoryRecipientRepository: InMemoryRecipientRepository
+let fakeHasher: FakeHasher
+
 let sut: RegisterRecipientUseCase
 
 describe('Register Recipient', () => {
   beforeEach(() => {
     inMemoryRecipientRepository = new InMemoryRecipientRepository()
+    fakeHasher = new FakeHasher()
 
-    sut = new RegisterRecipientUseCase(inMemoryRecipientRepository)
+    sut = new RegisterRecipientUseCase(inMemoryRecipientRepository, fakeHasher)
   })
 
   it('should be able to register a new user', async () => {
