@@ -3,6 +3,7 @@ import { CustomerRepository } from '../repositories/customer-repository'
 import { Either, left, right } from '@/core/either'
 import { Customer } from '../../enterprise/entities/customer'
 import { RecipientAlreadyExistsError } from './errors/recipient-already-exists-error'
+import { DocumentIsNotValid } from './errors/document-not-valid'
 
 export interface CreateCustomerUseCaseRequest {
   recipientId: UniqueEntityID
@@ -15,7 +16,7 @@ export interface CreateCustomerUseCaseRequest {
 }
 
 export type CreateCustomerUseCaseResponse = Either<
-  RecipientAlreadyExistsError,
+  RecipientAlreadyExistsError | DocumentIsNotValid,
   { customer: Customer }
 >
 
@@ -38,18 +39,26 @@ export class CreateCustomerUseCase {
       return left(new RecipientAlreadyExistsError(document))
     }
 
-    const customer = Customer.create({
-      addressId,
-      document,
-      email,
-      name,
-      phone,
-      recipientId,
-      stateRegistration,
-    })
+    try {
+      const customer = Customer.create({
+        addressId,
+        document,
+        email,
+        name,
+        phone,
+        recipientId,
+        stateRegistration,
+      })
 
-    await this.customerRepository.create(customer)
+      await this.customerRepository.create(customer)
 
-    return right({ customer })
+      return right({ customer })
+    } catch (error) {
+      if (error instanceof DocumentIsNotValid) {
+        return left(error)
+      }
+
+      return left(new Error(`Ocorreu um erro desconhecido: ${error}`))
+    }
   }
 }
