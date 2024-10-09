@@ -2,6 +2,7 @@ import { Entity } from '@/core/entities/entity'
 import { Optional } from '@/core/types/optional'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { DocumentValidator } from '@/core/utils/document-validator'
+import { DocumentIsNotValid } from '../../application/use-cases/errors/document-not-valid'
 
 export interface CustomerProps {
   recipientId: UniqueEntityID
@@ -37,7 +38,7 @@ export class Customer extends Entity<CustomerProps> {
     const isValid = documentValidator.validate(document)
 
     if (!isValid) {
-      throw new Error(`Documento "${document}" não é válido`)
+      throw new DocumentIsNotValid(document)
     }
 
     this.props.document = document
@@ -77,6 +78,8 @@ export class Customer extends Entity<CustomerProps> {
       },
       id,
     )
+
+    customer.document = props.document
 
     return customer
   }
