@@ -61,7 +61,7 @@ export class InMemoryCustomerRepository implements CustomerRepository {
 
   async findManyByRecipientIdWithAddress(
     recipientId: string,
-    { page, skip }: PaginationParams,
+    { page, skip = 20 }: PaginationParams,
   ): Promise<CustomerWithAddress[]> {
     const customers = this.items
       .filter((item) => item.recipientId.toString() === recipientId)
