@@ -29,6 +29,10 @@ export class Customer extends Entity<CustomerProps> {
     return this.props.name
   }
 
+  set name(name: string) {
+    this.props.name = name
+  }
+
   get document() {
     return this.props.document
   }
@@ -42,6 +46,8 @@ export class Customer extends Entity<CustomerProps> {
     }
 
     this.props.document = document
+
+    this.touch(document)
   }
 
   get type() {
@@ -52,16 +58,34 @@ export class Customer extends Entity<CustomerProps> {
     return this.props.stateRegistration
   }
 
+  set stateRegistration(sr: string | undefined) {
+    this.props.stateRegistration = sr
+  }
+
   get phone() {
     return this.props.phone
+  }
+
+  set phone(phone: string) {
+    this.props.phone = phone
   }
 
   get email() {
     return this.props.email
   }
 
+  set email(email: string) {
+    this.props.email = email
+  }
+
   get createdAt() {
     return this.props.createdAt
+  }
+
+  protected touch(document: string) {
+    const type = document.length > 11 ? 'jurídica' : 'fisíca'
+
+    this.props.type = type
   }
 
   static create(
