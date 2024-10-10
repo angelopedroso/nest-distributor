@@ -14,7 +14,7 @@ export type GetCustomerByIdUseCaseResponse = Either<
   }
 >
 
-export class GetCustomerByIdByIdUseCase {
+export class GetCustomerByIdUseCase {
   constructor(private customerRepository: CustomerRepository) {}
 
   async execute({
