@@ -49,8 +49,8 @@ describe('Fetch Customer', () => {
     const customer = await sut.execute({ recipientId, page: 1 })
 
     expect(customer.isRight()).toBeTruthy()
-    expect(customer.value?.customer).toHaveLength(3)
-    expect(customer.value?.customer).toEqual(
+    expect(customer.value?.customers).toHaveLength(3)
+    expect(customer.value?.customers).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           document: '69119164000139',
@@ -82,8 +82,8 @@ describe('Fetch Customer', () => {
     const customer = await sut.execute({ recipientId, page: 2 })
 
     expect(customer.isRight()).toBeTruthy()
-    expect(customer.value?.customer).toHaveLength(2)
-    expect(customer.value?.customer).toEqual(
+    expect(customer.value?.customers).toHaveLength(2)
+    expect(customer.value?.customers).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           document: '69119164000139',

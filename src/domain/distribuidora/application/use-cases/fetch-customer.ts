@@ -9,7 +9,7 @@ export interface FetchCustomerUseCaseRequest {
 
 export type FetchCustomerUseCaseResponse = Either<
   null,
-  { customer: CustomerWithAddress[] }
+  { customers: CustomerWithAddress[] }
 >
 
 export class FetchCustomerUseCase {
@@ -19,7 +19,7 @@ export class FetchCustomerUseCase {
     recipientId,
     page,
   }: FetchCustomerUseCaseRequest): Promise<FetchCustomerUseCaseResponse> {
-    const customer =
+    const customers =
       await this.customerRepository.findManyByRecipientIdWithAddress(
         recipientId,
         {
@@ -27,6 +27,6 @@ export class FetchCustomerUseCase {
         },
       )
 
-    return right({ customer })
+    return right({ customers })
   }
 }
